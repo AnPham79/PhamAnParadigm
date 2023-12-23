@@ -59,15 +59,25 @@ class Controller
         (new Account())->Logout($email, $matkhau, $hovaten);
     }
 
-    public function ShowPrd() {
+    public function ShowPrd()
+    {
         $ma_sp = $_GET['ma_sp'];
-    
+
         $product = new Product();
         $prdObject = $product->ShowPrd($ma_sp);
-    
+
         require './views/chitietsanpham.php';
     }
-    
+
+    // ---------------------------------- danh mục -----------------------------------
+    public function selectCategory()
+    {
+        $FK_ma_danhmuc = $_GET['FK_ma_danhmuc'];
+
+        $arr = (new Product())->getAllPrd($FK_ma_danhmuc);
+
+        require './views/sanpham.php';
+    }
 
     // --------------------------------- crud cho admin --------------------------------
 
@@ -88,9 +98,11 @@ class Controller
         $anh_sp = $_FILES['anh_sp'];
         $gia_sp = $_POST['gia_sp'];
         $mota_sp = $_POST['mota_sp'];
+        $FK_ma_danhmuc = $_POST['FK_ma_danhmuc'];
+        $FK_ma_thuonghieu = $_POST['FK_ma_thuonghieu'];
 
         $product = new Product();
-        $product->StorePrd($ten_sp, $anh_sp, $gia_sp, $mota_sp);
+        $product->StorePrd($ten_sp, $anh_sp, $gia_sp, $mota_sp, $FK_ma_danhmuc, $FK_ma_thuonghieu);
     }
 
     public function EditPrd()
@@ -115,7 +127,8 @@ class Controller
         $product->UpdatePrd($ma_sp, $ten_sp, $anh_sp, $gia_sp, $mota_sp);
     }
 
-    public function DeletePrd() {
+    public function DeletePrd()
+    {
         $ma_sp = $_GET['ma_sp'];
 
         $product = new Product();

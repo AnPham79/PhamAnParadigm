@@ -4,21 +4,47 @@
     method="POST" 
     enctype="multipart/form-data">
     
-    tên sản phẩm
+    Tên sản phẩm
     <br>
     <input type="text" name="ten_sp">
     <br>
-    ảnh
+    Ảnh
     <br>
     <input type="file" name="anh_sp">
     <br>
-    giá
+    Giá
     <br>
     <input type="text" name="gia_sp">
     <br>
-    mô tả
+    Mô tả
     <br>
     <input type="text" name="mota_sp">
+    <br>
+    Danh mục
+    <br>
+    <select name="FK_ma_danhmuc">
+        <?php
+        $sql_categories = "SELECT * FROM danhmuc";
+        $result_categories = (new Database())->conn_db($sql_categories);
+
+        while ($category = mysqli_fetch_assoc($result_categories)) {
+            echo "<option value='" . $category['ma_danhmuc'] . "'>" . $category['ten_danhmuc'] . "</option>";
+        }
+        ?>
+    </select>
+    <br>
+    Thương hiệu
+    <br>
+    <select name="FK_ma_thuonghieu">
+        <?php
+        $sql_brands = "SELECT * FROM thuonghieu";
+        $result_brands = (new Database())->conn_db($sql_brands);
+
+        while ($brand = mysqli_fetch_assoc($result_brands)) {
+            echo "<option value='" . $brand['ma_thuonghieu'] . "'>" . $brand['ten_thuonghieu'] . "</option>";
+        }
+        ?>
+    </select>
     <br>
     <button type="submit">Thêm sản phẩm</button>
 </form>

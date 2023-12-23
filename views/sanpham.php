@@ -10,6 +10,16 @@
 $search = '';
 ?>
 
+
+<br>
+<ul>
+    <li><a href="?action=selectCategory&FK_ma_danhmuc=1">Category 1</a></li>
+    <li><a href="?action=selectCategory&FK_ma_danhmuc=2">Category 2</a></li>
+    <li><a href="?action=selectCategory&FK_ma_danhmuc=3">Category 3</a></li>
+</ul>
+<br>
+
+
 <br>
 
 <table border="1" width="100%">
@@ -24,6 +34,8 @@ $search = '';
             <td>Ảnh</td>
             <td>Giá</td>
             <td>Mô tả</td>
+            <td>Danh mục</td>
+            <td>Thương hiệu</td>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +60,8 @@ $search = '';
                 <td>
                     <?php echo $each->get_motasp() ?>
                 </td>
+                <td><?php echo $each->get_FK_ten_danhmuc() ?></td>
+                <td><?php echo $each->get_FK_ten_thuonghieu() ?></td>
             </tr>
         <?php } ?>
     </tbody>

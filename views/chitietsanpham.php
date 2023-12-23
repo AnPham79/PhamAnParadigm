@@ -19,3 +19,12 @@ giá sản phẩm
 mô tả sản phẩm
 <br>
 <p><?php echo $prdObject->get_motasp() ?></p>
+<br>
+Danh mục
+<br>
+<p><?php echo $prdObject->get_FK_ten_danhmuc() ?></p>
+<br>
+Thương hiệu
+<br>
+<p><?php echo $prdObject->get_FK_ten_thuonghieu() ?></p>
+<br>

@@ -10,72 +10,155 @@ class Product
 {
     public function getAllPrd()
     {
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
+        if (isset($_GET['FK_ma_danhmuc'])) {
+            $FK_ma_danhmuc = $_GET['FK_ma_danhmuc'];
+
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+            } else {
+                $page = 1;
+            }
+
+            if (isset($_GET['search'])) {
+                $search = $_GET['search'];
+            } else {
+                $search = '';
+            }
+
+            $limit = 2;
+            $sql_check = "SELECT COUNT(*) 
+            FROM 
+            sanpham 
+            WHERE FK_ma_danhmuc = '$FK_ma_danhmuc' 
+            AND ten_sp 
+            LIKE '%$search%'";
+
+            $result_check = (new Database())->conn_db($sql_check);
+            $prd_check = mysqli_fetch_array($result_check);
+            $getResult = $prd_check['COUNT(*)'];
+            $num_page = ceil($getResult / $limit);
+            $offset = $limit * ($page - 1);
+
+            $sql = "SELECT sanpham.*, danhmuc.ten_danhmuc AS FK_ten_danhmuc, thuonghieu.ten_thuonghieu AS FK_ten_thuonghieu
+                    FROM sanpham 
+                    JOIN danhmuc ON sanpham.FK_ma_danhmuc = danhmuc.ma_danhmuc 
+                    JOIN thuonghieu ON sanpham.FK_ma_thuonghieu = thuonghieu.ma_thuonghieu 
+                    WHERE sanpham.FK_ma_danhmuc = '$FK_ma_danhmuc' AND sanpham.ten_sp LIKE '%$search%'
+                    LIMIT $limit OFFSET $offset";
+
+            $result = (new Database())->conn_db($sql);
+            $arr = [];
+
+            foreach ($result as $row) {
+                $object = new PrdObject();
+                $object->set_masp($row['ma_sp']);
+                $object->set_tensp($row['ten_sp']);
+                $object->set_anhsp($row['anh_sp']);
+                $object->set_giasp($row['gia_sp']);
+                $object->set_motasp($row['mota_sp']);
+
+                $object->FK_ten_danhmuc = $row['FK_ten_danhmuc'];
+                $object->FK_ten_thuonghieu = $row['FK_ten_thuonghieu'];
+
+                $arr[] = $object;
+            }
+
+            $output = '';
+
+            if ($page > 1) {
+                $output .= "<a href='?action=productPage&page=" . ($page - 1) . "'>Prev</a>";
+            }
+
+            $output .= "<ul class='pagination'>";
+            for ($i = 1; $i <= $num_page; $i++) {
+                $cls = ($i == $page) ? "class='active'" : '';
+                $output .= "<li><a href='?action=productPage&page=$i' $cls>$i</a></li>";
+            }
+            $output .= "</ul>";
+
+            if ($num_page > $page) {
+                $output .= "<a href='?action=productPage&page=" . ($page + 1) . "'>Next</a>";
+            }
+
+            echo $output;
+
+            return $arr;
         } else {
-            $page = 1;
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+            } else {
+                $page = 1;
+            }
+
+            if (isset($_GET['search'])) {
+                $search = $_GET['search'];
+            } else {
+                $search = '';
+            }
+
+            $sql_check = "SELECT COUNT(*) FROM sanpham";
+
+            $result_check = (new Database())->conn_db($sql_check);
+
+            $prd_check = mysqli_fetch_array($result_check);
+
+            $getResult = $prd_check['COUNT(*)'];
+
+            $limit = 2;
+
+            $num_page = ceil($getResult / $limit);
+
+            $offset = $limit * ($page - 1);
+
+            $sql = "SELECT sanpham.*, 
+                    danhmuc.ten_danhmuc AS FK_ten_danhmuc, 
+                    thuonghieu.ten_thuonghieu AS FK_ten_thuonghieu
+                    FROM sanpham 
+                    JOIN danhmuc ON sanpham.FK_ma_danhmuc = danhmuc.ma_danhmuc 
+                    JOIN thuonghieu ON sanpham.FK_ma_thuonghieu = thuonghieu.ma_thuonghieu 
+                    WHERE sanpham.ten_sp LIKE '%$search%'
+                    LIMIT $limit OFFSET $offset";
+
+
+            $result = (new Database())->conn_db($sql);
+
+            $arr = [];
+
+            foreach ($result as $row) {
+                $object = new PrdObject();
+                $object->set_masp($row['ma_sp']);
+                $object->set_tensp($row['ten_sp']);
+                $object->set_anhsp($row['anh_sp']);
+                $object->set_giasp($row['gia_sp']);
+                $object->set_motasp($row['mota_sp']);
+
+                $object->FK_ten_danhmuc = $row['FK_ten_danhmuc'];
+                $object->FK_ten_thuonghieu = $row['FK_ten_thuonghieu'];
+
+                $arr[] = $object;
+            }
+
+            $output = '';
+
+            if ($page > 1) {
+                $output .= "<a href='?action=productPage&page=" . ($page - 1) . "'>Prev</a>";
+            }
+
+            $output .= "<ul class='pagination'>";
+            for ($i = 1; $i <= $num_page; $i++) {
+                $cls = ($i == $page) ? "class='active'" : '';
+                $output .= "<li><a href='?action=productPage&page=$i' $cls>$i</a></li>";
+            }
+            $output .= "</ul>";
+
+            if ($num_page > $page) {
+                $output .= "<a href='?action=productPage&page=" . ($page + 1) . "'>Next</a>";
+            }
+
+            echo $output;
+
+            return $arr;
         }
-
-        if (isset($_GET['search'])) {
-            $search = $_GET['search'];
-        } else {
-            $search = '';
-        }
-
-        $sql_check = "SELECT COUNT(*) FROM sanpham";
-
-        $result_check = (new Database())->conn_db($sql_check);
-
-        $prd_check = mysqli_fetch_array($result_check);
-
-        $getResult = $prd_check['COUNT(*)'];
-
-        $limit = 2;
-
-        $num_page = ceil($getResult / $limit);
-
-        $offset = $limit * ($page - 1);
-
-        $sql = "SELECT * FROM sanpham 
-        WHERE ten_sp like '%$search%'
-         LIMIT $limit
-         OFFSET $offset";
-
-        $result = (new Database())->conn_db($sql);
-
-        $arr = [];
-
-        foreach ($result as $row) {
-            $object = new PrdObject();
-            $object->set_masp($row['ma_sp']);
-            $object->set_tensp($row['ten_sp']);
-            $object->set_anhsp($row['anh_sp']);
-            $object->set_giasp($row['gia_sp']);
-            $object->set_motasp($row['mota_sp']);
-
-            $arr[] = $object;
-        }
-
-        $output = '';
-
-        if ($page > 1) {
-            $output .= "<a href='?action=productPage&page=" . ($page - 1) . "'>Prev</a>";
-        }
-
-        $output .= "<ul class='pagination'>";
-        for ($i = 1; $i <= $num_page; $i++) {
-            $cls = ($i == $page) ? "class='active'" : '';
-            $output .= "<li><a href='?action=productPage&page=$i' $cls>$i</a></li>";
-        }
-        $output .= "</ul>";
-
-        if ($num_page > $page) {
-            $output .= "<a href='?action=productPage&page=" . ($page + 1) . "'>Next</a>";
-        }
-
-        echo $output;
-
-        return $arr;
     }
 
     public function getAllPrdinAdmin()
@@ -107,10 +190,15 @@ class Product
 
         $offset = $limit * ($page - 1);
 
-        $sql = "SELECT * FROM sanpham 
-        WHERE ten_sp like '%$search%'
-         LIMIT $limit
-         OFFSET $offset";
+        $sql = "SELECT sanpham.*, 
+                danhmuc.ten_danhmuc AS FK_ten_danhmuc, 
+                thuonghieu.ten_thuonghieu AS FK_ten_thuonghieu
+                FROM sanpham 
+                JOIN danhmuc ON sanpham.FK_ma_danhmuc = danhmuc.ma_danhmuc 
+                JOIN thuonghieu ON sanpham.FK_ma_thuonghieu = thuonghieu.ma_thuonghieu 
+                WHERE sanpham.ten_sp LIKE '%$search%'
+                LIMIT $limit OFFSET $offset";
+
 
         $result = (new Database())->conn_db($sql);
 
@@ -123,6 +211,9 @@ class Product
             $object->set_anhsp($row['anh_sp']);
             $object->set_giasp($row['gia_sp']);
             $object->set_motasp($row['mota_sp']);
+
+            $object->FK_ten_danhmuc = $row['FK_ten_danhmuc'];
+            $object->FK_ten_thuonghieu = $row['FK_ten_thuonghieu'];
 
             $arr[] = $object;
         }
@@ -151,7 +242,13 @@ class Product
 
     public function ShowPrd($ma_sp)
     {
-        $sql = "SELECT * FROM sanpham WHERE ma_sp = '$ma_sp'";
+        $sql = "SELECT sanpham.*, 
+                danhmuc.ten_danhmuc AS FK_ten_danhmuc, 
+                thuonghieu.ten_thuonghieu AS FK_ten_thuonghieu
+                FROM sanpham 
+                JOIN danhmuc ON sanpham.FK_ma_danhmuc = danhmuc.ma_danhmuc 
+                JOIN thuonghieu ON sanpham.FK_ma_thuonghieu = thuonghieu.ma_thuonghieu 
+                WHERE ma_sp = '" . $ma_sp . "'";
         $result = (new Database())->conn_db($sql);
         $row = mysqli_fetch_array($result);
 
@@ -162,13 +259,15 @@ class Product
         $object->set_giasp($row['gia_sp']);
         $object->set_motasp($row['mota_sp']);
 
+        $object->FK_ten_danhmuc = $row['FK_ten_danhmuc'];
+        $object->FK_ten_thuonghieu = $row['FK_ten_thuonghieu'];
+
         return $object;
     }
 
-
     // ------------------------------ CRUD cho admin ------------------------------
 
-    public function StorePrd($ten_sp, $anh_sp, $gia_sp, $mota_sp)
+    public function StorePrd($ten_sp, $anh_sp, $gia_sp, $mota_sp, $FK_ma_danhmuc, $FK_ma_thuonghieu)
     {
         $target_dir = "imagePrd/";
         $target_file = $target_dir . basename($anh_sp["name"]);
@@ -178,8 +277,8 @@ class Product
         }
 
         if (move_uploaded_file($anh_sp["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO sanpham (ten_sp, anh_sp, gia_sp, mota_sp) 
-            VALUES ('$ten_sp', '$target_file', '$gia_sp', '$mota_sp')";
+            $sql = "INSERT INTO sanpham (ten_sp, anh_sp, gia_sp, mota_sp, FK_ma_danhmuc, FK_ma_thuonghieu) 
+            VALUES ('$ten_sp', '$target_file', '$gia_sp', '$mota_sp', '$FK_ma_danhmuc', '$FK_ma_thuonghieu')";
 
             $result = (new Database())->conn_db($sql);
 

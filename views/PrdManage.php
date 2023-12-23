@@ -24,6 +24,8 @@ $search = '';
             <td>Ảnh</td>
             <td>Giá</td>
             <td>Mô tả</td>
+            <td>Danh mục</td>
+            <td>Thương hiệu</td>
             <td>Sửa</td>
             <td>Xóa</td>
         </tr>
@@ -46,6 +48,8 @@ $search = '';
                 <td>
                     <?php echo $each->get_motasp() ?>
                 </td>
+                <td><?php echo $each->get_FK_ten_danhmuc() ?></td>
+                <td><?php echo $each->get_FK_ten_thuonghieu() ?></td>
                 <td>
                     <a href="./index.php?action=EditPrd&ma_sp=<?php echo $each->get_masp() ?>">
                         Sửa
