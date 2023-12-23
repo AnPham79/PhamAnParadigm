@@ -10,8 +10,36 @@ class Product
 {
     public function getAllPrd()
     {
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        } else {
+            $page = 1;
+        }
 
-        $sql = "SELECT * FROM sanpham";
+        if (isset($_GET['search'])) {
+            $search = $_GET['search'];
+        } else {
+            $search = '';
+        }
+
+        $sql_check = "SELECT COUNT(*) FROM sanpham";
+
+        $result_check = (new Database())->conn_db($sql_check);
+
+        $prd_check = mysqli_fetch_array($result_check);
+
+        $getResult = $prd_check['COUNT(*)'];
+
+        $limit = 2;
+
+        $num_page = ceil($getResult / $limit);
+
+        $offset = $limit * ($page - 1);
+
+        $sql = "SELECT * FROM sanpham 
+        WHERE ten_sp like '%$search%'
+         LIMIT $limit
+         OFFSET $offset";
 
         $result = (new Database())->conn_db($sql);
 
@@ -28,10 +56,115 @@ class Product
             $arr[] = $object;
         }
 
-        mysqli_fetch_array($result);
+        $output = '';
+
+        if ($page > 1) {
+            $output .= "<a href='?action=productPage&page=" . ($page - 1) . "'>Prev</a>";
+        }
+
+        $output .= "<ul class='pagination'>";
+        for ($i = 1; $i <= $num_page; $i++) {
+            $cls = ($i == $page) ? "class='active'" : '';
+            $output .= "<li><a href='?action=productPage&page=$i' $cls>$i</a></li>";
+        }
+        $output .= "</ul>";
+
+        if ($num_page > $page) {
+            $output .= "<a href='?action=productPage&page=" . ($page + 1) . "'>Next</a>";
+        }
+
+        echo $output;
 
         return $arr;
     }
+
+    public function getAllPrdinAdmin()
+    {
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        } else {
+            $page = 1;
+        }
+
+        if (isset($_GET['search'])) {
+            $search = $_GET['search'];
+        } else {
+            $search = '';
+        }
+
+
+        $sql_check = "SELECT COUNT(*) FROM sanpham";
+
+        $result_check = (new Database())->conn_db($sql_check);
+
+        $prd_check = mysqli_fetch_array($result_check);
+
+        $getResult = $prd_check['COUNT(*)'];
+
+        $limit = 2;
+
+        $num_page = ceil($getResult / $limit);
+
+        $offset = $limit * ($page - 1);
+
+        $sql = "SELECT * FROM sanpham 
+        WHERE ten_sp like '%$search%'
+         LIMIT $limit
+         OFFSET $offset";
+
+        $result = (new Database())->conn_db($sql);
+
+        $arr = [];
+
+        foreach ($result as $row) {
+            $object = new PrdObject();
+            $object->set_masp($row['ma_sp']);
+            $object->set_tensp($row['ten_sp']);
+            $object->set_anhsp($row['anh_sp']);
+            $object->set_giasp($row['gia_sp']);
+            $object->set_motasp($row['mota_sp']);
+
+            $arr[] = $object;
+        }
+
+        $output = '';
+
+        if ($page > 1) {
+            $output .= "<a href='?action=pagePrdManage&page=" . ($page - 1) . "'>Prev</a>";
+        }
+
+        $output .= "<ul class='pagination'>";
+        for ($i = 1; $i <= $num_page; $i++) {
+            $cls = ($i == $page) ? "class='active'" : '';
+            $output .= "<li><a href='?action=pagePrdManage&page=$i' $cls>$i</a></li>";
+        }
+        $output .= "</ul>";
+
+        if ($num_page > $page) {
+            $output .= "<a href='?action=pagePrdManage&page=" . ($page + 1) . "'>Next</a>";
+        }
+
+        echo $output;
+
+        return $arr;
+    }
+
+    public function ShowPrd($ma_sp)
+    {
+        $sql = "SELECT * FROM sanpham WHERE ma_sp = '$ma_sp'";
+        $result = (new Database())->conn_db($sql);
+        $row = mysqli_fetch_array($result);
+
+        $object = new PrdObject();
+        $object->set_masp($row['ma_sp']);
+        $object->set_tensp($row['ten_sp']);
+        $object->set_anhsp($row['anh_sp']);
+        $object->set_giasp($row['gia_sp']);
+        $object->set_motasp($row['mota_sp']);
+
+        return $object;
+    }
+
 
     // ------------------------------ CRUD cho admin ------------------------------
 

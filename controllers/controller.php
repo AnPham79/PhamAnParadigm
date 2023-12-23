@@ -59,11 +59,21 @@ class Controller
         (new Account())->Logout($email, $matkhau, $hovaten);
     }
 
+    public function ShowPrd() {
+        $ma_sp = $_GET['ma_sp'];
+    
+        $product = new Product();
+        $prdObject = $product->ShowPrd($ma_sp);
+    
+        require './views/chitietsanpham.php';
+    }
+    
+
     // --------------------------------- crud cho admin --------------------------------
 
     public function pagePrdManage()
     {
-        $arr = (new Product())->getAllPrd();
+        $arr = (new Product())->getAllPrdinAdmin();
         require './views/PrdManage.php';
     }
 
