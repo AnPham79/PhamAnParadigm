@@ -13,6 +13,14 @@
     <br>
     <input type="date" name="ngaysinh">
     <br>
+    số điện thoại
+    <br>
+    <input type="text" name="sodienthoai">
+    <br>
+    địa chỉ
+    <br>
+    <input type="text" name="diachi">
+    <br>
     email
     <br>
     <input type="text" name="email">

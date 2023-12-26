@@ -64,6 +64,12 @@ $search = '';
         <?php } ?>
     </tbody>
 </table>
+    <?php   
+        $page = $_GET['page'] ?? 1;
+        $num_page = 3;
+        $obj = new Product();
+        echo $obj->PaginationAdmin($page, $num_page);
+    ?>
 
 <script>
     document.getElementById('searchForm').addEventListener('submit', function(event) {

@@ -6,6 +6,8 @@ class AccountObject {
     private string $gioitinh;
     private string $ngaysinh;
     private string $email;
+    private string $sodienthoai;
+    private string $diachi;
     private string $matkhau;
 
     public function get_matk() {
@@ -34,6 +36,22 @@ class AccountObject {
 
     public function get_ngaysinh() {
         return $this->ngaysinh;
+    }
+
+    public function set_sodienthoai($var) {
+        $this->sodienthoai = $var;
+    }
+
+    public function get_sodienthoai() {
+        return $this->sodienthoai;
+    }
+
+    public function set_diachi($var) {
+        $this->diachi = $var;
+    }
+
+    public function get_diachi() {
+        return $this->diachi;
     }
 
     public function set_ngaysinh($var) {
