@@ -447,7 +447,7 @@ class Product
         $sanpham_name = '';
         $sanpham_quantity = '';
         foreach ($products as $ma_sp => $product) {
-            $sanpham_name .= $product['ten_sp'];
+            $sanpham_name .= $product['ten_sp'] . " , ";
             $sanpham_quantity .=  $product['soluong'] . " , ";
         }
 
@@ -663,11 +663,64 @@ class Account
                 $row['emailnguoidung'],
                 $row['tensanpham'],
                 $row['soluong'],
-                $row['tongtien']
+                $row['tongtien'],
+                $row['trangthai']
             );
             $arr[] = $object;
         }
 
         return $arr;
+    }
+
+    // ------------------------ lấy tất cả hóa đơn ---------------------------------
+
+    public function getAllOrderByAdmin()
+    {
+        $sql = "SELECT * FROM hoadon";
+
+        $result = (new Database())->conn_db($sql);
+
+        $arr = [];
+
+        foreach ($result as $row) {
+            $object = new objectBill(
+                $row['ma_hoadon'],
+                $row['tennguoidung'],
+                $row['diachinguoidung'],
+                $row['sdtnguoidung'],
+                $row['emailnguoidung'],
+                $row['tensanpham'],
+                $row['soluong'],
+                $row['tongtien'],
+                $row['trangthai']
+            );
+            $arr[] = $object;
+        }
+        return $arr;
+    }
+
+    // ----------------------------- xác nhận đơn hàng -----------------------------
+
+    public function ChangeStatus($ma_hoadon, $trangthai)
+    {
+        $sql = "UPDATE hoadon 
+            SET trangthai = $trangthai
+            WHERE ma_hoadon = '$ma_hoadon'";
+
+        $result = (new Database())->conn_db($sql);
+
+        // var_dump($result);
+
+        header('location: ?action=getAllOrderByAdmin');
+    }
+
+    // ----------------------------- hủy đơn hàng ----------------
+    public function CancelOrder($ma_hoadon)
+    {
+        $sql = "DELETE FROM hoadon WHERE ma_hoadon = '$ma_hoadon'";
+
+        $result = (new Database())->conn_db($sql);
+
+        var_dump($result);
     }
 }

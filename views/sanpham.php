@@ -80,11 +80,11 @@ if (isset($_SESSION['cart'])) {
             </tr>
         <?php } ?>
     </tbody>
-    <?php 
-        $page = $_GET['page'] ?? 1;
-        $num_page = 3;
-        $obj = new Product();
-        echo $obj->Pagination($page, $num_page);
+    <?php
+    $page = $_GET['page'] ?? 1;
+    $num_page = 3;
+    $obj = new Product();
+    echo $obj->Pagination($page, $num_page);
     ?>
 </table>
 
@@ -92,10 +92,4 @@ if (isset($_SESSION['cart'])) {
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        let searchValue = document.querySelector('input[name="search"]').value;
-        let currentURL = new URL(window.location.href);
-        currentURL.searchParams.set('search', searchValue);
-
-        window.location.href = currentURL.href;
-    });
-</script>
+        let searchValue = document.querySelector('input[name=" search"]').value; let currentURL=new URL(window.location.href); currentURL.searchParams.set('search', searchValue); window.location.href=currentURL.href; }); </script>

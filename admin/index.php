@@ -11,4 +11,9 @@
             Xem danh sách sản phẩm tại đây
         </a>
     </li>
+    <li>
+        <a href="../index.php?action=getAllOrderByAdmin">
+            Xem danh sách hóa đơn tại đây
+        </a>
+    </li>
 </ul>

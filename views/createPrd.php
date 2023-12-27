@@ -1,9 +1,7 @@
 <h1>Đây là form thêm sản phẩm</h1>
 
-<form action="./index.php?action=StorePrd" 
-    method="POST" 
-    enctype="multipart/form-data">
-    
+<form action="./index.php?action=StorePrd" method="POST" enctype="multipart/form-data">
+
     Tên sản phẩm
     <br>
     <input type="text" name="ten_sp">

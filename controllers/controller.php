@@ -230,7 +230,37 @@ class Controller
 
     // ----------------------------- lịch sử mua hàng ---------------------------
 
-    public function viewHistory() {
+    public function viewHistory()
+    {
         require './views/lichsumuahang.php';
+    }
+
+    // ----------------------------- admin đơn hàng -----------------------------
+    public function getAllOrderByAdmin()
+    {
+        $obj = new Account();
+        $arr = $obj->getAllOrderByAdmin();
+
+        require './views/quanlihoadon.php';
+    }
+
+    // ---------------------------- Hủy đơn hàng -------------------------------
+    public function CancelOrder()
+    {
+        $ma_hoadon = $_POST['ma_hoadon'];
+
+        $obj = new Account();
+        $obj->CancelOrder($ma_hoadon);
+
+        header('location:?action=viewHistory');
+    }
+    // ----------------------------- Xác nhận đơn hàng -------------------------------
+    public function ChangeStatus()
+    {
+        $ma_hoadon = $_POST['ma_hoadon'];
+        $trangthai = $_POST['trangthai'];
+
+        $obj = new Account();
+        $obj->ChangeStatus($ma_hoadon, $trangthai);
     }
 }

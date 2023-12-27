@@ -6,14 +6,14 @@ class Database
     private $db_user = 'root';
     private $db_pass = '';
     private $db_name = 'project_oop_php';
-    
+
     private $conn = null;
 
     public function __construct()
     {
         $this->conn = mysqli_connect($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
         mysqli_set_charset($this->conn, 'utf8');
-        
+
         if (!$this->conn) {
             error_log("Kết nối thất bại: " . mysqli_connect_error());
         }

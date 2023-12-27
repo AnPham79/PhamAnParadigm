@@ -10,6 +10,7 @@ class objectBill
     private $tensanpham;
     private $soluong;
     private $tongtien;
+    private $trangthai;
 
     public function __construct(
         $ma_hoadon,
@@ -19,7 +20,8 @@ class objectBill
         $emailnguoidung,
         $tensanpham,
         $soluong,
-        $tongtien
+        $tongtien,
+        $trangthai
     ) {
         $this->ma_hoadon = $ma_hoadon;
         $this->tennguoidung = $tennguoidung;
@@ -29,6 +31,8 @@ class objectBill
         $this->tensanpham = $tensanpham;
         $this->soluong = $soluong;
         $this->tongtien = $tongtien;
+        $this->trangthai = $trangthai;
+
     }
 
     public function get_ma_hoadon()
@@ -109,5 +113,15 @@ class objectBill
     public function set_tongtien($tongtien)
     {
         $this->tongtien = $tongtien;
+    }
+
+    public function get_trangthai()
+    {
+        return $this->trangthai;
+    }
+
+    public function set_trangthai($trangthai)
+    {
+        $this->trangthai = $trangthai;
     }
 }
