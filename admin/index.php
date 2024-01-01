@@ -16,4 +16,9 @@
             Xem danh sách hóa đơn tại đây
         </a>
     </li>
+    <li>
+        <a href="../index.php?action=getAllAccount">
+            Xem danh sách tài khoản tại đây
+        </a>
+    </li>
 </ul>

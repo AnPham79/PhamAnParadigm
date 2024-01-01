@@ -175,6 +175,15 @@ class Controller
         $obj->AddToCart($ma_sp);
     }
 
+    // ------------------------------- add to cart ở trang chi tiết --------------------------------
+
+    public function AddToCartInPrdDetail()
+    {
+        $ma_sp = $_GET['ma_sp'];
+        $obj = new Product();
+        $obj->AddToCartInPrdDetail($ma_sp);
+    }
+
     // ------------------------------ xem giỏ hàng ---------------------------------
     public function ViewCart()
     {
@@ -262,5 +271,16 @@ class Controller
 
         $obj = new Account();
         $obj->ChangeStatus($ma_hoadon, $trangthai);
+    }
+
+    // ---------------------------- Gửi Mail -----------------------------------------
+    // ---------------------------- Lấy toàn bộ tài khoản -----------------------------
+
+    public function getAllAccount()
+    {
+        $obj = new Account();
+        $arr = $obj->getAllAccount();
+
+        require './views/quanlitaikhoan.php';
     }
 }

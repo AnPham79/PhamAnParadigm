@@ -31,7 +31,7 @@ class Product
             }
 
             $limit = 2;
-            
+
             $sql_check = "SELECT COUNT(*) 
             FROM 
             sanpham 
@@ -74,17 +74,17 @@ class Product
             if ($page > 1) {
                 $output .= "<a href='?action=productPage&FK_ma_danhmuc=$FK_ma_danhmuc&page=" . ($page - 1) . "'>Prev</a>";
             }
-            
+
             $output .= "<ul class='pagination'>";
             for ($i = 1; $i <= $num_page; $i++) {
                 $cls = ($i == $page) ? "class='active'" : '';
                 $output .= "<li><a href='?action=productPage&FK_ma_danhmuc=$FK_ma_danhmuc&page=$i' $cls>$i</a></li>";
             }
             $output .= "</ul>";
-            
+
             if ($num_page > $page) {
                 $output .= "<a href='?action=productPage&FK_ma_danhmuc=$FK_ma_danhmuc&page=" . ($page + 1) . "'>Next</a>";
-            }            
+            }
 
             echo $output;
 
@@ -190,6 +190,32 @@ class Product
         header('location:?action=productPage');
     }
 
+    // -------------------------------- thêm vào giỏ hàng ----------------------------------------
+
+    public function AddToCartInPrdDetail($ma_sp): void
+    {
+        if (isset($_POST['soluong'])) {
+            $soluong = $_POST['soluong'];
+
+            if (empty($_SESSION['cart'][$ma_sp])) {
+                $sql = "SELECT * FROM sanpham WHERE ma_sp = '$ma_sp'";
+                $result = (new Database())->conn_db($sql);
+                $each = mysqli_fetch_array($result);
+
+                $_SESSION['cart'][$ma_sp]['ten_sp'] = $each['ten_sp'];
+                $_SESSION['cart'][$ma_sp]['anh_sp'] = $each['anh_sp'];
+                $_SESSION['cart'][$ma_sp]['gia_sp'] = $each['gia_sp'];
+                $_SESSION['cart'][$ma_sp]['mota_sp'] = $each['mota_sp'];
+                $_SESSION['cart'][$ma_sp]['soluong'] = $soluong;
+            } else {
+                $_SESSION['cart'][$ma_sp]['soluong']++;
+            }
+
+            header("Location: ./index.php?action=ShowPrd&ma_sp=$ma_sp");
+        }
+    }
+
+
     // ------------------------------ lấy hết sản phẩm in ra trnag admin --------------------------------
 
 
@@ -251,22 +277,22 @@ class Product
 
         $output = '';
 
-            if ($page > 1) {
-                $output .= "<a href='?action=pagePrdManage&page=" . ($page - 1) . "'>Prev</a>";
-            }
+        if ($page > 1) {
+            $output .= "<a href='?action=pagePrdManage&page=" . ($page - 1) . "'>Prev</a>";
+        }
 
-            $output .= "<ul class='pagination'>";
-            for ($i = 1; $i <= $num_page; $i++) {
-                $cls = ($i == $page) ? "class='active'" : '';
-                $output .= "<li><a href='?action=pagePrdManage&page=$i' $cls>$i</a></li>";
-            }
-            $output .= "</ul>";
+        $output .= "<ul class='pagination'>";
+        for ($i = 1; $i <= $num_page; $i++) {
+            $cls = ($i == $page) ? "class='active'" : '';
+            $output .= "<li><a href='?action=pagePrdManage&page=$i' $cls>$i</a></li>";
+        }
+        $output .= "</ul>";
 
-            if ($num_page > $page) {
-                $output .= "<a href='?action=pagePrdManage&page=" . ($page + 1) . "'>Next</a>";
-            }
+        if ($num_page > $page) {
+            $output .= "<a href='?action=pagePrdManage&page=" . ($page + 1) . "'>Next</a>";
+        }
 
-            echo $output;
+        echo $output;
 
         return $arr;
     }
@@ -481,13 +507,13 @@ class Product
     public function ProcessComment($tennguoibinhluan, $ngaybinhluan, $noidungbinhluan, $FK_ma_sp)
     {
         $sql = "INSERT INTO 
-        binhluan(tennguoibinhluan, ngaybinhluan, noidungbinhluan, FK_ma_sp) 
-        VALUES
-        ('$tennguoibinhluan', '$ngaybinhluan', '$noidungbinhluan', '$FK_ma_sp')";
+            binhluan(tennguoibinhluan, ngaybinhluan, noidungbinhluan, FK_ma_sp) 
+            VALUES
+            ('$tennguoibinhluan', '$ngaybinhluan', '$noidungbinhluan', '$FK_ma_sp')";
 
         $result = (new Database)->conn_db($sql);
 
-        header('location:?action=productPage');
+        header("Location: ./index.php?action=productPage");
     }
 
     // ---------------------------------- lấy hết bình luận tại FK_ma_sp ----------------------------------------------------------------
@@ -734,5 +760,31 @@ class Account
         $result = (new Database())->conn_db($sql);
 
         var_dump($result);
+    }
+
+    // ------------------------------ lấy toàn bộ tài khoản --------------------
+    public function getAllAccount()
+    {
+        $sql = "SELECT * FROM taikhoan";
+
+        $result = (new Database())->conn_db($sql);
+
+        $arr = [];
+
+        foreach ($result as $row) {
+            $object = new AccountObject();
+            $object->set_matk($row['ma_tk']);
+            $object->set_hoten($row['hovaten']);
+            $object->set_gioitinh($row['gioitinh']);
+            $object->set_ngaysinh($row['ngaysinh']);
+            $object->set_email($row['email']);
+            $object->set_sodienthoai($row['sodienthoai']);
+            $object->set_diachi($row['diachi']);
+            $object->set_matkhau($row['matkhau']);
+
+            $arr[] = $object;
+        }
+
+        return $arr;
     }
 }
