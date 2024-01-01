@@ -30,7 +30,8 @@ class Product
                 $search = '';
             }
 
-            $limit = 8;
+            $limit = 2;
+            
             $sql_check = "SELECT COUNT(*) 
             FROM 
             sanpham 
@@ -68,6 +69,25 @@ class Product
                 $arr[] = $object;
             }
 
+            $output = '';
+
+            if ($page > 1) {
+                $output .= "<a href='?action=productPage&FK_ma_danhmuc=$FK_ma_danhmuc&page=" . ($page - 1) . "'>Prev</a>";
+            }
+            
+            $output .= "<ul class='pagination'>";
+            for ($i = 1; $i <= $num_page; $i++) {
+                $cls = ($i == $page) ? "class='active'" : '';
+                $output .= "<li><a href='?action=productPage&FK_ma_danhmuc=$FK_ma_danhmuc&page=$i' $cls>$i</a></li>";
+            }
+            $output .= "</ul>";
+            
+            if ($num_page > $page) {
+                $output .= "<a href='?action=productPage&FK_ma_danhmuc=$FK_ma_danhmuc&page=" . ($page + 1) . "'>Next</a>";
+            }            
+
+            echo $output;
+
             return $arr;
         } else {
             if (isset($_GET['page'])) {
@@ -90,7 +110,7 @@ class Product
 
             $getResult = $prd_check['COUNT(*)'];
 
-            $limit = 8;
+            $limit = 2;
 
             $num_page = ceil($getResult / $limit);
 
@@ -124,54 +144,27 @@ class Product
                 $arr[] = $object;
             }
 
+            $output = '';
+
+            if ($page > 1) {
+                $output .= "<a href='?action=productPage&page=" . ($page - 1) . "'>Prev</a>";
+            }
+
+            $output .= "<ul class='pagination'>";
+            for ($i = 1; $i <= $num_page; $i++) {
+                $cls = ($i == $page) ? "class='active'" : '';
+                $output .= "<li><a href='?action=productPage&page=$i' $cls>$i</a></li>";
+            }
+            $output .= "</ul>";
+
+            if ($num_page > $page) {
+                $output .= "<a href='?action=productPage&page=" . ($page + 1) . "'>Next</a>";
+            }
+
+            echo $output;
+
             return $arr;
         }
-    }
-
-    // ----------------------------------- phân trang  ---------------------------
-
-    function Pagination($page, $num_page)
-    {
-        $output = '';
-
-        if ($page > 1) {
-            $output .= "<a href='?action=productPage&page=" . ($page - 1) . "'>Prev</a>";
-        }
-
-        $output .= "<ul class='pagination'>";
-        for ($i = 1; $i <= $num_page; $i++) {
-            $cls = ($i == $page) ? "class='active'" : '';
-            $output .= "<li><a href='?action=productPage&page=$i' $cls>$i</a></li>";
-        }
-        $output .= "</ul>";
-
-        if ($num_page > $page) {
-            $output .= "<a href='?action=productPage&page=" . ($page + 1) . "'>Next</a>";
-        }
-
-        return $output;
-    }
-
-    function PaginationAdmin($page, $num_page)
-    {
-        $output = '';
-
-        if ($page > 1) {
-            $output .= "<a href='?action=pagePrdManage&page=" . ($page - 1) . "'>Prev</a>";
-        }
-
-        $output .= "<ul class='pagination'>";
-        for ($i = 1; $i <= $num_page; $i++) {
-            $cls = ($i == $page) ? "class='active'" : '';
-            $output .= "<li><a href='?action=pagePrdManage&page=$i' $cls>$i</a></li>";
-        }
-        $output .= "</ul>";
-
-        if ($num_page > $page) {
-            $output .= "<a href='?action=pagePrdManage&page=" . ($page + 1) . "'>Next</a>";
-        }
-
-        return $output;
     }
 
     // -------------------------------- thêm vào giỏ hàng ----------------------------------------
@@ -222,7 +215,7 @@ class Product
 
         $getResult = $prd_check['COUNT(*)'];
 
-        $limit = 8;
+        $limit = 5;
 
         $num_page = ceil($getResult / $limit);
 
@@ -255,6 +248,25 @@ class Product
 
             $arr[] = $object;
         }
+
+        $output = '';
+
+            if ($page > 1) {
+                $output .= "<a href='?action=pagePrdManage&page=" . ($page - 1) . "'>Prev</a>";
+            }
+
+            $output .= "<ul class='pagination'>";
+            for ($i = 1; $i <= $num_page; $i++) {
+                $cls = ($i == $page) ? "class='active'" : '';
+                $output .= "<li><a href='?action=pagePrdManage&page=$i' $cls>$i</a></li>";
+            }
+            $output .= "</ul>";
+
+            if ($num_page > $page) {
+                $output .= "<a href='?action=pagePrdManage&page=" . ($page + 1) . "'>Next</a>";
+            }
+
+            echo $output;
 
         return $arr;
     }

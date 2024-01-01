@@ -25,6 +25,7 @@ if (isset($_SESSION['cart'])) {
 
 <br>
 <ul>
+    <li><a href="?action=productPage">tất cả sản phẩm</a></li>
     <li><a href="?action=selectCategory&FK_ma_danhmuc=1">Mô hình One Piece Chibi</a></li>
     <li><a href="?action=selectCategory&FK_ma_danhmuc=2">Mô hình One Piece lớn</a></li>
 </ul>
@@ -79,17 +80,14 @@ if (isset($_SESSION['cart'])) {
                 </td>
             </tr>
         <?php } ?>
-    </tbody>
-    <?php
-    $page = $_GET['page'] ?? 1;
-    $num_page = 3;
-    $obj = new Product();
-    echo $obj->Pagination($page, $num_page);
-    ?>
+        </tbody>
 </table>
-
 <script>
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        let searchValue = document.querySelector('input[name=" search"]').value; let currentURL=new URL(window.location.href); currentURL.searchParams.set('search', searchValue); window.location.href=currentURL.href; }); </script>
+        let searchValue = document.querySelector('input[name="search"]').value; 
+        let currentURL=new URL(window.location.href); 
+        currentURL.searchParams.set('search', searchValue); 
+        window.location.href=currentURL.href; }); 
+</script>
